@@ -1,5 +1,6 @@
-import React, {ChangeEvent, KeyboardEvent, FC, useState} from 'react';
+import React, {ChangeEvent, FC} from 'react';
 import {FilterTaskType} from "./App";
+import {AddItemForm} from "./components/AddItemForm";
 
 export type TaskType = {
     id: string
@@ -27,26 +28,7 @@ export const Todolist: FC<TodolistPropsType> = (
     }
 ) => {
 
-    const [newTitle, setNewTitle] = useState('')
-    const [error, setError] = useState<string | null>(null)
 
-    const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTitle(e.currentTarget.value)
-    }
-    const addNewTaskHandler = () => {
-        if (newTitle.trim() !== '') {
-            addNewTask(todolistID, newTitle)
-            setNewTitle('')
-        } else {
-            setError('Title is required')
-        }
-    }
-    const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null)
-        if (e.key === 'Enter') {
-            addNewTaskHandler()
-        }
-    }
     const changeTaskFilterHandler = (value: FilterTaskType) => {
         changeTaskFilter(todolistID, value)
     }
@@ -55,21 +37,17 @@ export const Todolist: FC<TodolistPropsType> = (
         removeTodolist(todolistID)
     }
 
+    const addTaskHandler = (newTitle: string) => {
+        addNewTask (todolistID, newTitle)
+    }
+
     return (
         <div>
             <h3>
                 {title}
                 <button onClick={removeTodolistHandler}>x</button>
             </h3>
-            <div>
-                <input value={newTitle}
-                       onChange={onChangeTitleHandler}
-                       onKeyDown={onKeyDownHandler}
-                       className={error ? 'error' : ''}
-                />
-                <button onClick={addNewTaskHandler}>+</button>
-                {error && <div className='error-message'>{error}</div>}
-            </div>
+            <AddItemForm addItem={addTaskHandler}/>
             <ul>
                 {tasks.map(task => {
                     const removeTaskHandler = () => {
