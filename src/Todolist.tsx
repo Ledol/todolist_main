@@ -12,10 +12,10 @@ type TodolistPropsType = {
     todolistID: string
     title: string
     tasks: Array<TaskType>
-    addNewTask: (newTitle: string) => void
-    removeTask: (taskId: string) => void
+    addNewTask: (todolistID: string, newTitle: string) => void
+    removeTask: (todolistID: string, taskId: string) => void
     changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
-    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
+    changeTaskStatus: (todolistID: string, taskId: string, newIsDone: boolean) => void
     filter: string
 }
 
@@ -35,7 +35,7 @@ export const Todolist: FC<TodolistPropsType> = (
     const addNewTaskHandler = () => {
 
         if (newTitle.trim() !== '') {
-            addNewTask(newTitle)
+            addNewTask(todolistID, newTitle)
             setNewTitle('')
         } else {
             setError('Title is required')
@@ -66,10 +66,10 @@ export const Todolist: FC<TodolistPropsType> = (
             <ul>
                 {tasks.map(task => {
                     const removeTaskHandler = () => {
-                        removeTask(task.id)
+                        removeTask(todolistID, task.id)
                     }
                     const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                        changeTaskStatus(task.id, e.currentTarget.checked)
+                        changeTaskStatus(todolistID, task.id, e.currentTarget.checked)
                     }
 
                     return <li key={task.id} className={task.isDone ? 'is-done' : ''}>
