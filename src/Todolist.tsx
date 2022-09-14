@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
+import React, {ChangeEvent, KeyboardEvent, FC, useState} from 'react';
 import {FilterTaskType} from "./App";
 
 export type TaskType = {
-    id: number
+    id: string
     taskTitle: string
     isDone: boolean
 }
@@ -11,20 +11,37 @@ export type TaskType = {
 type TodolistPropsType = {
     title: string
     tasks: TaskType[]
-    removeTask: (taskId: number) => void
+    addNewTask: (newTitle: string) => void
+    removeTask: (taskId: string) => void
     changeTaskFilter: (newValue: FilterTaskType) => void
 }
 
 export const Todolist: FC<TodolistPropsType> = (
-    {title, tasks, removeTask, changeTaskFilter}) => {
+    {title, tasks, removeTask, changeTaskFilter, addNewTask}) => {
 
+    const [newTitle, setNewTitle] = useState('')
+
+    const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTitle(e.currentTarget.value)
+    }
+    const addNewTaskHandler = () => {
+        if(newTitle.trim()) {
+            addNewTask(newTitle)
+            setNewTitle('')
+        }
+    }
+    const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            addNewTaskHandler()
+        }
+    }
 
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <input/>
-                <button>+</button>
+                <input value={newTitle} onChange={onChangeTitleHandler} onKeyDown={onKeyDownHandler}/>
+                <button onClick={addNewTaskHandler} >+</button>
             </div>
             <ul>
                 {tasks.map(task => {
@@ -32,7 +49,7 @@ export const Todolist: FC<TodolistPropsType> = (
                         removeTask(task.id)
                     }
 
-                    return <li>
+                    return <li key={task.id}>
                         <input type="checkbox" checked={task.isDone}/>
                         <span>{task.taskTitle}</span>
                         <button onClick={removeTaskHandler}>x</button>
