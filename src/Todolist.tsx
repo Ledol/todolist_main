@@ -9,17 +9,22 @@ export type TaskType = {
 
 
 type TodolistPropsType = {
+    todolistID: string
     title: string
-    tasks: TaskType[]
+    tasks: Array<TaskType>
     addNewTask: (newTitle: string) => void
     removeTask: (taskId: string) => void
-    changeTaskFilter: (newValue: FilterTaskType) => void
+    changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
     changeTaskStatus: (taskId: string, newIsDone: boolean) => void
     filter: string
 }
 
 export const Todolist: FC<TodolistPropsType> = (
-    {title, tasks, addNewTask , removeTask, changeTaskFilter, changeTaskStatus, filter}) => {
+    {
+        todolistID, title, tasks, addNewTask, removeTask,
+        changeTaskFilter, changeTaskStatus, filter
+    }
+) => {
 
     const [newTitle, setNewTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
@@ -29,7 +34,7 @@ export const Todolist: FC<TodolistPropsType> = (
     }
     const addNewTaskHandler = () => {
 
-        if(newTitle.trim() !== '') {
+        if (newTitle.trim() !== '') {
             addNewTask(newTitle)
             setNewTitle('')
         } else {
@@ -43,7 +48,7 @@ export const Todolist: FC<TodolistPropsType> = (
         }
     }
     const changeTaskFilterHandler = (value: FilterTaskType) => {
-        changeTaskFilter(value)
+        changeTaskFilter(todolistID, value)
     }
 
     return (
@@ -55,7 +60,7 @@ export const Todolist: FC<TodolistPropsType> = (
                        onKeyDown={onKeyDownHandler}
                        className={error ? 'error' : ''}
                 />
-                <button onClick={addNewTaskHandler} >+</button>
+                <button onClick={addNewTaskHandler}>+</button>
                 {error && <div className='error-message'>{error}</div>}
             </div>
             <ul>
@@ -76,9 +81,15 @@ export const Todolist: FC<TodolistPropsType> = (
                 })}
             </ul>
             <div>
-                <button className={filter == 'all' ? 'active-filter' : ''} onClick={() => changeTaskFilterHandler('all')}>All</button>
-                <button className={filter == 'active' ? 'active-filter' : ''}  onClick={() => changeTaskFilterHandler('active')}>Active</button>
-                <button className={filter == 'completed' ? 'active-filter' : ''}  onClick={() => changeTaskFilterHandler('completed')}>Completed</button>
+                <button className={filter == 'all' ? 'active-filter' : ''}
+                        onClick={() => changeTaskFilterHandler('all')}>All
+                </button>
+                <button className={filter == 'active' ? 'active-filter' : ''}
+                        onClick={() => changeTaskFilterHandler('active')}>Active
+                </button>
+                <button className={filter == 'completed' ? 'active-filter' : ''}
+                        onClick={() => changeTaskFilterHandler('completed')}>Completed
+                </button>
             </div>
         </div>
     );
