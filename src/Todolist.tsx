@@ -17,12 +17,13 @@ type TodolistPropsType = {
     changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
     changeTaskStatus: (todolistID: string, taskId: string, newIsDone: boolean) => void
     filter: string
+    removeTodolist: (todolistID: string) => void
 }
 
 export const Todolist: FC<TodolistPropsType> = (
     {
         todolistID, title, tasks, addNewTask, removeTask,
-        changeTaskFilter, changeTaskStatus, filter
+        changeTaskFilter, changeTaskStatus, filter, removeTodolist
     }
 ) => {
 
@@ -33,7 +34,6 @@ export const Todolist: FC<TodolistPropsType> = (
         setNewTitle(e.currentTarget.value)
     }
     const addNewTaskHandler = () => {
-
         if (newTitle.trim() !== '') {
             addNewTask(todolistID, newTitle)
             setNewTitle('')
@@ -51,9 +51,16 @@ export const Todolist: FC<TodolistPropsType> = (
         changeTaskFilter(todolistID, value)
     }
 
+    const removeTodolistHandler = () => {
+        removeTodolist(todolistID)
+    }
+
     return (
         <div>
-            <h3>{title}</h3>
+            <h3>
+                {title}
+                <button onClick={removeTodolistHandler}>x</button>
+            </h3>
             <div>
                 <input value={newTitle}
                        onChange={onChangeTitleHandler}
