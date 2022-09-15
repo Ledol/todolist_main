@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FC} from 'react';
 import {FilterTaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
+import {EditableSpan} from "./components/EditableSpan";
 
 export type TaskType = {
     id: string
@@ -19,12 +20,15 @@ type TodolistPropsType = {
     changeTaskStatus: (todolistID: string, taskId: string, newIsDone: boolean) => void
     filter: string
     removeTodolist: (todolistID: string) => void
+    editTaskTitle: (todolistID: string, taskId: string, newTitle: string) => void
+    editTodolistTitle: (todolistID: string, newTitle: string) => void
 }
 
 export const Todolist: FC<TodolistPropsType> = (
     {
         todolistID, title, tasks, addNewTask, removeTask,
-        changeTaskFilter, changeTaskStatus, filter, removeTodolist
+        changeTaskFilter, changeTaskStatus, filter, removeTodolist, editTaskTitle,
+        editTodolistTitle
     }
 ) => {
 
@@ -36,6 +40,9 @@ export const Todolist: FC<TodolistPropsType> = (
     const removeTodolistHandler = () => {
         removeTodolist(todolistID)
     }
+    const editTodolistTitleHandler = (newTitle: string) => {
+        editTodolistTitle(todolistID, newTitle)
+    }
 
     const addTaskHandler = (newTitle: string) => {
         addNewTask (todolistID, newTitle)
@@ -44,7 +51,7 @@ export const Todolist: FC<TodolistPropsType> = (
     return (
         <div>
             <h3>
-                {title}
+                <EditableSpan title={title} onChange={editTodolistTitleHandler}/>
                 <button onClick={removeTodolistHandler}>x</button>
             </h3>
             <AddItemForm addItem={addTaskHandler}/>
@@ -56,11 +63,14 @@ export const Todolist: FC<TodolistPropsType> = (
                     const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
                         changeTaskStatus(todolistID, task.id, e.currentTarget.checked)
                     }
+                    const editTitleHandler = (newTitle: string) => {
+                        editTaskTitle(todolistID, task.id, newTitle)
+                    }
 
                     return <li key={task.id} className={task.isDone ? 'is-done' : ''}>
                         <input type="checkbox"
                                checked={task.isDone} onChange={changeTaskStatusHandler}/>
-                        <span>{task.taskTitle}</span>
+                        <EditableSpan title={task.taskTitle} onChange={editTitleHandler}/>
                         <button onClick={removeTaskHandler}>x</button>
                     </li>
                 })}
