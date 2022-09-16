@@ -2,6 +2,8 @@ import React, {ChangeEvent, FC} from 'react';
 import {FilterTaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
+import {Button, IconButton} from "@mui/material";
+import {Delete} from "@mui/icons-material";
 
 export type TaskType = {
     id: string
@@ -52,7 +54,9 @@ export const Todolist: FC<TodolistPropsType> = (
         <div>
             <h3>
                 <EditableSpan title={title} onChange={editTodolistTitleHandler}/>
-                <button onClick={removeTodolistHandler}>x</button>
+                <IconButton onClick={removeTodolistHandler}>
+                    <Delete/>
+                </IconButton>
             </h3>
             <AddItemForm addItem={addTaskHandler}/>
             <ul>
@@ -71,20 +75,28 @@ export const Todolist: FC<TodolistPropsType> = (
                         <input type="checkbox"
                                checked={task.isDone} onChange={changeTaskStatusHandler}/>
                         <EditableSpan title={task.taskTitle} onChange={editTitleHandler}/>
-                        <button onClick={removeTaskHandler}>x</button>
+                        <IconButton onClick={removeTaskHandler}>
+                            <Delete/>
+                        </IconButton>
                     </li>
                 })}
             </ul>
             <div>
-                <button className={filter == 'all' ? 'active-filter' : ''}
-                        onClick={() => changeTaskFilterHandler('all')}>All
-                </button>
-                <button className={filter == 'active' ? 'active-filter' : ''}
-                        onClick={() => changeTaskFilterHandler('active')}>Active
-                </button>
-                <button className={filter == 'completed' ? 'active-filter' : ''}
-                        onClick={() => changeTaskFilterHandler('completed')}>Completed
-                </button>
+                <Button variant={filter === 'all' ? 'outlined' : 'text'}
+                        onClick={() => changeTaskFilterHandler('all')}
+                        color='inherit'
+                >All
+                </Button>
+                <Button variant={filter === 'active' ? 'outlined' : 'text'}
+                        onClick={() => changeTaskFilterHandler('active')}
+                        color='primary'
+                >Active
+                </Button>
+                <Button variant={filter === 'completed' ? 'outlined' : 'text'}
+                        onClick={() => changeTaskFilterHandler('completed')}
+                        color='secondary'
+                >Completed
+                </Button>
             </div>
         </div>
     );

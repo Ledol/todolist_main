@@ -1,8 +1,9 @@
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from 'react';
+import {Button, TextField} from "@mui/material";
 
 
 export type AddItemFormPropsType = {
-    addItem: ( newTitle: string) => void
+    addItem: (newTitle: string) => void
 }
 
 export const AddItemForm: FC<AddItemFormPropsType> = ({addItem}) => {
@@ -30,12 +31,15 @@ export const AddItemForm: FC<AddItemFormPropsType> = ({addItem}) => {
 
     return (
         <div>
-            <input value={newTitle}
-                   onChange={onChangeTitleHandler}
-                   onKeyDown={onKeyDownHandler}
-                   className={error ? 'error' : ''}
+            <TextField variant='outlined'
+                       value={newTitle}
+                       onChange={onChangeTitleHandler}
+                       onKeyDown={onKeyDownHandler}
+                       className={error ? 'error' : ''}
             />
-            <button onClick={addNewTaskHandler}>+</button>
+            <Button variant='contained' color='primary' onClick={addNewTaskHandler}
+                    style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>+</Button>
+
             {error && <div className='error-message'>{error}</div>}
         </div>
     );
