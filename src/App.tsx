@@ -3,6 +3,8 @@ import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
+import {Menu} from "@mui/icons-material";
 
 export type FilterTaskType = 'all' | 'active' | 'completed'
 export type TodolistsType = {
@@ -74,8 +76,23 @@ function App() {
 
     return (
         <div className="App">
+            <AppBar position='static'>
+                <Toolbar>
+                    <IconButton edge='start' color='inherit' aria-label='menu'>
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant='h6'>
+                        Todolist
+                    </Typography>
+                    <Button color='inherit'>Login</Button>
+                </Toolbar>
+            </AppBar>
+            <Container fixed>
+            <Grid container style={{padding: '20px'}}>
             <AddItemForm addItem={addNewTodolist}/>
+            </Grid>
 
+            <Grid container spacing={3}>
             {todolists.map(tl => {
 
                 let filteredTasks = tasks[tl.id];
@@ -86,7 +103,9 @@ function App() {
                     filteredTasks = tasks[tl.id].filter(t => t.isDone)
                 }
 
-                return <Todolist key={tl.id}
+                return <Grid item>
+                    <Paper style={{padding: '10px'}}>
+                <Todolist key={tl.id}
                                  todolistID={tl.id}
                                  title={tl.title}
                                  tasks={filteredTasks}
@@ -99,9 +118,12 @@ function App() {
                                  editTaskTitle={editTaskTitle}
                                  editTodolistTitle={editTodolistTitle}
                 />
+                    </Paper>
+                </Grid>
             })}
 
-
+            </Grid>
+            </Container>
         </div>
     );
 }

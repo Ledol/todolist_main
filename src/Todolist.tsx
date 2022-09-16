@@ -2,8 +2,8 @@ import React, {ChangeEvent, FC} from 'react';
 import {FilterTaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
-import {Button, IconButton} from "@mui/material";
-import {Delete} from "@mui/icons-material";
+import {Button, Checkbox, IconButton} from "@mui/material";
+import { Delete} from "@mui/icons-material";
 
 export type TaskType = {
     id: string
@@ -47,7 +47,7 @@ export const Todolist: FC<TodolistPropsType> = (
     }
 
     const addTaskHandler = (newTitle: string) => {
-        addNewTask (todolistID, newTitle)
+        addNewTask(todolistID, newTitle)
     }
 
     return (
@@ -59,7 +59,7 @@ export const Todolist: FC<TodolistPropsType> = (
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTaskHandler}/>
-            <ul>
+            <div>
                 {tasks.map(task => {
                     const removeTaskHandler = () => {
                         removeTask(todolistID, task.id)
@@ -71,16 +71,15 @@ export const Todolist: FC<TodolistPropsType> = (
                         editTaskTitle(todolistID, task.id, newTitle)
                     }
 
-                    return <li key={task.id} className={task.isDone ? 'is-done' : ''}>
-                        <input type="checkbox"
-                               checked={task.isDone} onChange={changeTaskStatusHandler}/>
+                    return <div key={task.id} className={task.isDone ? 'is-done' : ''}>
+                        <Checkbox checked={task.isDone} onChange={changeTaskStatusHandler} color='primary'/>
                         <EditableSpan title={task.taskTitle} onChange={editTitleHandler}/>
                         <IconButton onClick={removeTaskHandler}>
                             <Delete/>
                         </IconButton>
-                    </li>
+                    </div>
                 })}
-            </ul>
+            </div>
             <div>
                 <Button variant={filter === 'all' ? 'outlined' : 'text'}
                         onClick={() => changeTaskFilterHandler('all')}
