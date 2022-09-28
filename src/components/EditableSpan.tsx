@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useState} from 'react';
+import React, {ChangeEvent, FC, memo, useState} from 'react';
 import {TextField} from "@mui/material";
 
 type EditableSpanPropsType = {
@@ -7,7 +7,7 @@ type EditableSpanPropsType = {
 
 }
 
-export const EditableSpan: FC<EditableSpanPropsType> = React.memo(({title, onChange}) => {
+export const EditableSpan: FC<EditableSpanPropsType> = memo(({title, onChange}) => {
     const [edit, setEdit] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState(title)
 

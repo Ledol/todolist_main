@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useCallback} from 'react';
+import React, {ChangeEvent, FC, memo, useCallback} from 'react';
 import {Checkbox, IconButton} from "@mui/material";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@mui/icons-material";
@@ -11,7 +11,7 @@ type TaskPropsType = {
     editTaskTitle: (taskId: string, newTitle: string) => void
 }
 
-export const Task: FC<TaskPropsType> = React.memo(({removeTask, editTaskTitle, changeTaskStatus, task}) => {
+export const Task: FC<TaskPropsType> = memo(({removeTask, editTaskTitle, changeTaskStatus, task}) => {
     console.log('Task was call')
     const removeTaskHandler = () => {
         removeTask(task.id)
@@ -21,9 +21,9 @@ export const Task: FC<TaskPropsType> = React.memo(({removeTask, editTaskTitle, c
     }
     const editTitleHandler = useCallback((newTitle: string) => {
         editTaskTitle(task.id, newTitle)
-    }, [editTaskTitle])
+    }, [editTaskTitle, task.id])
 
-    return <div key={task.id} className={task.isDone ? 'is-done' : ''}>
+    return <div className={task.isDone ? 'is-done' : ''}>
         <Checkbox checked={task.isDone} onChange={changeTaskStatusHandler} color='primary'/>
         <EditableSpan title={task.taskTitle} onChange={editTitleHandler}/>
         <IconButton onClick={removeTaskHandler}>

@@ -1,10 +1,10 @@
-import React, { FC, useCallback} from 'react';
+import React, {FC, memo, useCallback} from 'react';
 import {FilterTaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {Task} from "./components/Task";
+import {TaskWithRedux} from "./components/TaskWithRedux";
 
 
 export type TaskType = {
@@ -22,20 +22,20 @@ type TodolistPropsType = {
     removeTask: (todolistID: string, taskId: string) => void
     changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
     changeTaskStatus: (todolistID: string, taskId: string, newIsDone: boolean) => void
-    filter: string
+    filter: FilterTaskType
     removeTodolist: (todolistID: string) => void
     editTaskTitle: (todolistID: string, taskId: string, newTitle: string) => void
     editTodolistTitle: (todolistID: string, newTitle: string) => void
 }
 
-export const Todolist: FC<TodolistPropsType> = React.memo((
+export const Todolist: FC<TodolistPropsType> = memo((
     {
         todolistID, title, tasks, addNewTask, removeTask,
         changeTaskFilter, changeTaskStatus, filter, removeTodolist, editTaskTitle,
         editTodolistTitle
     }
 ) => {
-
+    console.log('Todolist called')
     const changeTaskFilterHandler = useCallback((value: FilterTaskType) => {
         changeTaskFilter(todolistID, value)
     }, [changeTaskFilter, todolistID])
@@ -80,11 +80,13 @@ export const Todolist: FC<TodolistPropsType> = React.memo((
             <AddItemForm addItem={addTaskHandler}/>
             <div>
                 {filteredTasks.map(task => {
-                    return <Task key={task.id}
+                    return  <TaskWithRedux key={task.id} task={task} todolistId={todolistID}/>
+                    /*<Task key={task.id}
                                  task={task}
                                  changeTaskStatus={changeTaskStatusHandler}
                                  removeTask={removeTaskHandler}
-                                 editTaskTitle={editTaskTitleHandler}/>
+                                 editTaskTitle={editTaskTitleHandler}/>*/
+
                 })}
             </div>
             <div>

@@ -26,7 +26,7 @@ export type TasksStateType = {
 }
 
 function AppWithReducer() {
-
+    console.log('AppWithReducer')
 
     let todolistID1 = v1()
     let todolistID2 = v1()
