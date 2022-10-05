@@ -4,7 +4,7 @@ import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {TaskWithRedux} from "./components/TaskWithRedux";
+import {Task} from "./components/Task";
 
 
 export type TaskType = {
@@ -80,12 +80,14 @@ export const Todolist: FC<TodolistPropsType> = memo((
             <AddItemForm addItem={addTaskHandler}/>
             <div>
                 {filteredTasks.map(task => {
-                    return  <TaskWithRedux key={task.id} task={task} todolistId={todolistID}/>
-                    /*<Task key={task.id}
+                    return  <Task key={task.id}
                                  task={task}
                                  changeTaskStatus={changeTaskStatusHandler}
                                  removeTask={removeTaskHandler}
-                                 editTaskTitle={editTaskTitleHandler}/>*/
+                                 editTaskTitle={editTaskTitleHandler}/>
+
+                    /*<TaskWithRedux key={task.id} task={task} todolistId={todolistID}/>*/
+
 
                 })}
             </div>
