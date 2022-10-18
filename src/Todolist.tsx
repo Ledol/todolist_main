@@ -1,17 +1,11 @@
 import React, {FC, memo, useCallback} from 'react';
-import {FilterTaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "./components/Task";
-
-
-export type TaskType = {
-    id: string
-    taskTitle: string
-    isDone: boolean
-}
+import {TaskStatuses, TaskType} from "./api/todolist-api";
+import {FilterTaskType} from "./state/todolists-reducer";
 
 
 type TodolistPropsType = {
@@ -21,7 +15,7 @@ type TodolistPropsType = {
     addNewTask: (todolistID: string, newTitle: string) => void
     removeTask: (todolistID: string, taskId: string) => void
     changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
-    changeTaskStatus: (todolistID: string, taskId: string, newIsDone: boolean) => void
+    changeTaskStatus: (todolistID: string, taskId: string, status: TaskStatuses) => void
     filter: FilterTaskType
     removeTodolist: (todolistID: string) => void
     editTaskTitle: (todolistID: string, taskId: string, newTitle: string) => void
@@ -53,14 +47,14 @@ export const Todolist: FC<TodolistPropsType> = memo((
 
     let filteredTasks = tasks;
     if (filter === 'active') {
-        filteredTasks = tasks.filter(t => !t.isDone)
+        filteredTasks = tasks.filter(t => t.status === TaskStatuses.New)
     }
     if (filter === 'completed') {
-        filteredTasks = tasks.filter(t => t.isDone)
+        filteredTasks = tasks.filter(t => t.status === TaskStatuses.Completed)
     }
 
-    const changeTaskStatusHandler = useCallback((taskId: string, newIsDone: boolean) => {
-        changeTaskStatus(todolistID, taskId, newIsDone)
+    const changeTaskStatusHandler = useCallback((taskId: string, status: TaskStatuses) => {
+        changeTaskStatus(todolistID, taskId, status)
     }, [changeTaskStatus, todolistID])
     const removeTaskHandler = useCallback((taskId: string) => {
         removeTask(todolistID, taskId)

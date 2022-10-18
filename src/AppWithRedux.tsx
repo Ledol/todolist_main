@@ -1,33 +1,27 @@
 import React, {useCallback} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import { Todolist} from "./Todolist";
 import {AddItemForm} from "./components/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {
     addTodolistAC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC,
-    removeTodolistAC,
+    changeTodolistTitleAC, FilterTaskType,
+    removeTodolistAC, TodolistDomainType,
 } from "./state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
+import {TaskStatuses, TaskType} from "./api/todolist-api";
 
-export type FilterTaskType = 'all' | 'active' | 'completed'
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterTaskType
-
-}
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
 function AppWithRedux() {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType,TasksStateType>(state => state.tasks)
     const dispatch = useDispatch()
 
@@ -44,8 +38,8 @@ function AppWithRedux() {
         dispatch(changeTodolistFilterAC(todolistID, newValue))
     }, [dispatch])
 
-    const changeTaskStatus = useCallback((todolistID: string, taskId: string, newIsDone: boolean) => {
-        dispatch(changeTaskStatusAC(todolistID, taskId, newIsDone))
+    const changeTaskStatus = useCallback((todolistID: string, taskId: string, status: TaskStatuses) => {
+        dispatch(changeTaskStatusAC(todolistID, taskId, status))
     }, [dispatch])
     const editTaskTitle = useCallback((todolistID: string, taskId: string, newTitle: string) => {
         dispatch(changeTaskTitleAC(todolistID, taskId, newTitle))

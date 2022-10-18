@@ -14,7 +14,7 @@ export type ResponseType<D = {}> = {
     fieldsErrors: Array<string>
     data: D
 }
-type TodolistType = {
+export type TodolistType = {
     id: string
     addedDate: string
     order: number
@@ -26,15 +26,31 @@ type getTaskType = {
     items: TaskType[]
     totalCount:number
 }
-type TaskType = {
+
+export enum TaskStatuses {
+    New,
+    InProgress,
+    Completed,
+    Draft
+}
+
+export enum TaskPriorities {
+    Low,
+    Middle,
+    Hi,
+    Urgently,
+    Later
+}
+
+export type TaskType = {
     addedDate: string
     deadline: string
     description: string
     id: string
     order: number
-    priority: number
+    priority: TaskPriorities
     startDate: string
-    status: number
+    status: TaskStatuses
     title: string
     todoListId: string
 }
