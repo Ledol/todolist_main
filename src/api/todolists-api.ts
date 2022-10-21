@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios, {AxiosResponse} from "axios";
+
 
 const instance = axios.create({
     baseURL: "https://social-network.samuraijs.com/api/1.1/",
@@ -55,18 +56,18 @@ export type TaskType = {
     todoListId: string
 }
 
-type updateTaskType = {
+export type updateTaskModelType = {
     title: string
     description: string| null
-    status: number
-    priority: number
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string| null
     deadline: string| null
 }
 
-export const todolistAPI = {
+export const todolistsApi = {
     updateTodolist(todolistId: string, title: string) {
-        return instance.put<ResponseType>(
+        return instance.put<{title: string}, AxiosResponse<ResponseType>>(
             `todo-lists/${todolistId}`,
             {title},
         )
@@ -77,7 +78,7 @@ export const todolistAPI = {
         )
     },
     createTodolist(title: string) {
-        return instance.post<ResponseType<{ item: TodolistType }>>(
+        return instance.post<{title: string}, AxiosResponse<ResponseType<{ item: TodolistType }>>>(
             `todo-lists`,
             {title},
         )
@@ -92,7 +93,7 @@ export const todolistAPI = {
         )
     },
     createTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<TaskType>>(
+        return instance.post<{title: string}, AxiosResponse<ResponseType<{item:TaskType}>>>(
             `todo-lists/${todolistId}/tasks`,
             {title},
         )
@@ -102,8 +103,8 @@ export const todolistAPI = {
             `todo-lists/${todolistId}/tasks/${taskId}`,
         )
     },
-    updateTask(todolistId: string, taskId: string, model: updateTaskType ) {
-        return instance.put<ResponseType<updateTaskType>> (
+    updateTask(todolistId: string, taskId: string, model: updateTaskModelType ) {
+        return instance.put<updateTaskModelType,AxiosResponse<ResponseType<{item:TaskType}>>> (
             `todo-lists/${todolistId}/tasks/${taskId}`,
             model
         )

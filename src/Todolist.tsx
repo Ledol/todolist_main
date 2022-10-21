@@ -1,11 +1,13 @@
-import React, {FC, memo, useCallback} from 'react';
+import React, {FC, memo, useCallback, useEffect} from 'react';
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "./components/Task";
-import {TaskStatuses, TaskType} from "./api/todolist-api";
+import {TaskStatuses, TaskType} from "./api/todolists-api";
 import {FilterTaskType} from "./state/todolists-reducer";
+import {useDispatch} from "react-redux";
+import {getTasksTC} from "./state/tasks-reducer";
 
 
 type TodolistPropsType = {
@@ -30,6 +32,8 @@ export const Todolist: FC<TodolistPropsType> = memo((
     }
 ) => {
     console.log('Todolist called')
+    const dispatch = useDispatch()
+
     const changeTaskFilterHandler = useCallback((value: FilterTaskType) => {
         changeTaskFilter(todolistID, value)
     }, [changeTaskFilter, todolistID])
@@ -62,6 +66,10 @@ export const Todolist: FC<TodolistPropsType> = memo((
     const editTaskTitleHandler = useCallback((taskId: string, newTitle: string) => {
         editTaskTitle(todolistID, taskId, newTitle)
     }, [editTaskTitle, todolistID])
+
+    useEffect(() => {
+        dispatch(getTasksTC(todolistID))
+    }, [])
 
     return (
         <div>
