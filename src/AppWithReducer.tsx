@@ -12,8 +12,15 @@ import {
     removeTodolistAC,
     todolistsReducer
 } from "./state/todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
-import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolist-api";
+import {
+    addTaskTC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    tasksReducer
+} from "./state/tasks-reducer";
+import {TaskPriorities, TaskStatuses, TaskType} from "./api/todolists-api";
+import {useDispatch} from "react-redux";
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
@@ -47,6 +54,7 @@ function AppWithReducer() {
                 startDate: "", deadline: "", addedDate: "", order: 0, priority: TaskPriorities.Low, description: ""},
         ]
     })
+    const dispatch = useDispatch()
 
     const addNewTodolist = (newTitle: string) => {
         let action = addTodolistAC(newTitle)
@@ -72,7 +80,8 @@ function AppWithReducer() {
         dispatchTasks(changeTaskTitleAC(todolistID, taskId, newTitle))
     }
     const addNewTask = (todolistID: string, newTitle: string) => {
-        dispatchTasks(addTaskAC(todolistID, newTitle))
+
+        dispatch(addTaskTC(todolistID, newTitle))
     }
     const removeTask = (todolistID: string, taskId: string) => {
         dispatchTasks(removeTaskAC(todolistID, taskId))
