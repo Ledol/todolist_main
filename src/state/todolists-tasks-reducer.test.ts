@@ -5,6 +5,14 @@ import {tasksReducer} from "./tasks-reducer";
 test('ids should be equals', () => {
     const startTasksState: TasksStateType = {}
     const startTodolistsState: Array<TodolistDomainType> = []
+    /*const todolist: TodolistDomainType = {
+        id: 'todolistId1',
+        title: "What to learn",
+        filter: "all",
+        addedDate: '',
+        order: 0
+    }*/
+
 
     const action = addTodolistAC('new todolist')
 
@@ -18,3 +26,5 @@ test('ids should be equals', () => {
     expect(idFromTasks).toBe(action.payload.todolistID)
     expect(idFromTodolists).toBe(action.payload.todolistID)
 })
+
+
