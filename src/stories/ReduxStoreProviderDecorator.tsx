@@ -5,15 +5,18 @@ import {tasksReducer} from "../state/tasks-reducer";
 import {todolistsReducer} from "../state/todolists-reducer";
 import {v1} from "uuid";
 import {TaskPriorities, TaskStatuses} from "../api/todolists-api";
+import {appReducer} from "../state/app-reducer";
+
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer
+    todolists: todolistsReducer,
+    app: appReducer
 })
 
 const initialGlobalState:AppRootStateType = {
     todolists: [
-        {id: 'todolistId1', title: 'What to learn', filter: 'all', order: 0, addedDate: ""},
+        {id: 'todolistId1', title: 'What to learn', filter: 'all', order: 0, addedDate: "" },
         {id: 'todolistId2', title: 'What to buy', filter: 'all', order: 0, addedDate: ""}
     ],
     tasks: {
@@ -29,10 +32,14 @@ const initialGlobalState:AppRootStateType = {
             {id: v1(), title: 'React Book', status: TaskStatuses.Completed, todoListId: 'todolistId2',
                 startDate: "", deadline: "", addedDate: "", order: 0, priority: TaskPriorities.Low, description: ""}
         ]
+    },
+    app: {
+        error: null,
+        status: 'idle'
     }
 }
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as AppRootStateType)
+export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as AppRootStateType )
 
 
 export const ReduxStoreProviderDecorator = (storyFn: any) => {
