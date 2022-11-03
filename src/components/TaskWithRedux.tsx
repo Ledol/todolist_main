@@ -3,7 +3,7 @@ import {Checkbox, IconButton} from "@mui/material";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@mui/icons-material";
 import {useDispatch} from "react-redux";
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
+import {updateTaskAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
 import {TaskStatuses, TaskType} from "../api/todolists-api";
 
 
@@ -20,7 +20,8 @@ export const TaskWithRedux: FC<TaskWithReduxPropsType> = memo(({task, todolistId
         dispatch(removeTaskAC(todolistId, task.id ))
     }
     const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(changeTaskStatusAC(todolistId, task.id, e.currentTarget.checked ? TaskStatuses.Completed: TaskStatuses.New ))
+        let status = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
+        dispatch(updateTaskAC(todolistId, task.id, {status} ))
     }
     const editTitleHandler = (newTitle: string) => {
         dispatch(changeTaskTitleAC(todolistId, task.id, newTitle ))

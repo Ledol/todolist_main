@@ -10,7 +10,8 @@ test('ids should be equals', () => {
         title: "What to learn",
         filter: "all",
         addedDate: '',
-        order: 0
+        order: 0,
+        entityStatus: "idle"
     }
 
 

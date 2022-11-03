@@ -90,7 +90,8 @@ test('new array should be added when new todolist is added', () => {
         title: "What to learn",
         filter: "all",
         addedDate: '',
-        order: 0
+        order: 0,
+        entityStatus: "idle"
     }
 
     const action = addTodolistAC(todolist)

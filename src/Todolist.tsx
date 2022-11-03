@@ -8,11 +8,13 @@ import {TaskStatuses, TaskType} from "./api/todolists-api";
 import {FilterTaskType} from "./state/todolists-reducer";
 import {useDispatch} from "react-redux";
 import {getTasksTC} from "./state/tasks-reducer";
+import {RequestStatusType} from "./state/app-reducer";
 
 
 type TodolistPropsType = {
     todolistID: string
     title: string
+    entityStatus: RequestStatusType
     tasks: Array<TaskType>
     addNewTask: (todolistID: string, newTitle: string) => void
     removeTask: (todolistID: string, taskId: string) => void
@@ -26,9 +28,8 @@ type TodolistPropsType = {
 
 export const Todolist: FC<TodolistPropsType> = memo((
     {
-        todolistID, title, tasks, addNewTask, removeTask,
-        changeTaskFilter, changeTaskStatus, filter, removeTodolist, editTaskTitle,
-        editTodolistTitle
+        todolistID, title, tasks, addNewTask, removeTask, changeTaskFilter,
+        changeTaskStatus, filter, removeTodolist, editTaskTitle, editTodolistTitle, entityStatus
     }
 ) => {
     console.log('Todolist called')
@@ -74,22 +75,21 @@ export const Todolist: FC<TodolistPropsType> = memo((
     return (
         <div>
             <h3>
-                <EditableSpan title={title} onChange={editTodolistTitleHandler}/>
-                <IconButton onClick={removeTodolistHandler}>
+                <EditableSpan title={title} onChange={editTodolistTitleHandler} disabled={entityStatus === 'loading'}/>
+                <IconButton onClick={removeTodolistHandler} disabled={entityStatus === 'loading'}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm addItem={addTaskHandler}/>
+            <AddItemForm addItem={addTaskHandler} disabled={entityStatus === "loading"}/>
             <div>
                 {filteredTasks.map(task => {
-                    return  <Task key={task.id}
+                    return <Task key={task.id}
                                  task={task}
                                  changeTaskStatus={changeTaskStatusHandler}
                                  removeTask={removeTaskHandler}
-                                 editTaskTitle={editTaskTitleHandler}/>
-
-                    /*<TaskWithRedux key={task.id} task={task} todolistId={todolistID}/>*/
-
+                                 editTaskTitle={editTaskTitleHandler}
+                                 entityStatus={entityStatus}
+                    />
 
                 })}
             </div>
