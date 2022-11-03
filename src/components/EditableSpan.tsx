@@ -4,10 +4,11 @@ import {TextField} from "@mui/material";
 type EditableSpanPropsType = {
     title: string
     onChange: (newTitle: string) => void
+    disabled?: boolean
 
 }
 
-export const EditableSpan: FC<EditableSpanPropsType> = memo(({title, onChange}) => {
+export const EditableSpan: FC<EditableSpanPropsType> = memo(({title, onChange, disabled}) => {
     const [edit, setEdit] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState(title)
 
@@ -26,7 +27,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = memo(({title, onChange}) 
     return (
         edit
             ? <TextField variant='outlined' value={newTitle} onChange={changeEditTitle} autoFocus
-                         onBlur={activateViewMode}/>
+                         onBlur={activateViewMode} disabled={disabled}/>
             : <span onDoubleClick={activateEditMode}>{title}</span>
     );
 });

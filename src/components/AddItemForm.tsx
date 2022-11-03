@@ -5,9 +5,10 @@ import {AddBox} from "@mui/icons-material";
 
 export type AddItemFormPropsType = {
     addItem: (newTitle: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm: FC<AddItemFormPropsType> = memo(({addItem}) => {
+export const AddItemForm: FC<AddItemFormPropsType> = memo(({addItem, disabled}) => {
     console.log('AddItemForm was call')
 
     const [newTitle, setNewTitle] = useState('')
@@ -42,9 +43,10 @@ export const AddItemForm: FC<AddItemFormPropsType> = memo(({addItem}) => {
                        error={!!error}
                        label='Title'
                        helperText={error}
+                       disabled={disabled}
             />
 
-            <IconButton color='primary' onClick={addNewTaskHandler}>
+            <IconButton color='primary' onClick={addNewTaskHandler} disabled={disabled}>
                 <AddBox/>
             </IconButton>
 

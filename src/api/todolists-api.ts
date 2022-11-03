@@ -65,7 +65,7 @@ export type updateTaskModelType = {
     deadline: string| null
 }
 
-export const todolistsApi = {
+export const todolistsAPI = {
     updateTodolist(todolistId: string, title: string) {
         return instance.put<{title: string}, AxiosResponse<ResponseType>>(
             `todo-lists/${todolistId}`,
