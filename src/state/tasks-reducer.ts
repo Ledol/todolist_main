@@ -102,14 +102,20 @@ export const getTasksTC = (todolistID: string) => (dispatch: Dispatch<TasksActio
             dispatch(setTasksAC(res.data.items, todolistID))
             dispatch(setAppStatusAC('succeeded'))
         })
+        .catch((error: AxiosError) => {
+            handleServerNetworkError(error, dispatch)
+        })
 
 }
 export const removeTaskTC = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
     todolistsAPI.deleteTask(todolistID, taskID)
-        .then((res) => {
+        .then(() => {
             dispatch(removeTaskAC(todolistID, taskID))
             dispatch(setAppStatusAC('succeeded'))
+        })
+        .catch((error: AxiosError) => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 export const addTaskTC = (todolistID: string, title: string) => (dispatch: Dispatch) => {
