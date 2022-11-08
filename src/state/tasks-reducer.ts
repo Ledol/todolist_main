@@ -1,16 +1,20 @@
-import {TasksStateType} from "../App";
 import {AddTodolistACType, RemoveTodolistACType, SetTodolistsACType} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, updateTaskModelType} from "../api/todolists-api";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "./store";
-import { setAppStatusAC, SetAppStatusACType} from "./app-reducer";
+import {RequestStatusType, setAppStatusAC, SetAppStatusACType} from "./app-reducer";
 import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
+import {TasksStateType} from "../AppWithRedux";
 
 export type TasksActionsType = removeTaskACType | addTaskACType | changeTaskStatusACType | changeTaskTitleACType
-    | AddTodolistACType | RemoveTodolistACType | SetTodolistsACType | setTasksACType
+    | AddTodolistACType | RemoveTodolistACType | SetTodolistsACType | setTasksACType | ChangeTaskEntityStatusACType
 
 const initialState: TasksStateType = {}
+
+export type TaskDomainType = TaskType & {
+    entityStatus: RequestStatusType
+}
 
 export const tasksReducer = (state: TasksStateType = initialState, action: TasksActionsType): TasksStateType => {
     switch (action.type) {
@@ -46,6 +50,10 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Tasks
             return stateCopy
         case "SET-TASKS":
             return {...state, [action.payload.todoId]: action.payload.tasks}
+        case "CHANGE-TASK-ENTITY-STATUS":
+            return {...state, [action.payload.todolistID]: state[action.payload.todolistID].map(
+                    t => t.id === action.payload.taskID ? {...t, entityStatus: action.payload.status}
+                        : t)}
 
         default:
             return state
@@ -62,7 +70,7 @@ export const removeTaskAC = (todolistID: string, taskID: string) => {
 }
 
 type addTaskACType = ReturnType<typeof addTaskAC>
-export const addTaskAC = (todolistID: string, task: TaskType) => {
+export const addTaskAC = (todolistID: string, task: TaskDomainType) => {
     return {
         type: 'ADD-TASK',
         payload: {todolistID, task}
@@ -86,12 +94,20 @@ export const changeTaskTitleAC = (todolistID: string, taskID: string, changedTit
 }
 
 type setTasksACType = ReturnType<typeof setTasksAC>
-export const setTasksAC = (tasks: TaskType[], todoId: string) => {
+export const setTasksAC = (tasks: TaskDomainType[], todoId: string) => {
     return {
         type: 'SET-TASKS',
         payload: {tasks, todoId}
 
     } as const
+}
+
+type ChangeTaskEntityStatusACType = ReturnType<typeof changeTaskEntityStatusAC>
+export const changeTaskEntityStatusAC = (todolistID: string, taskID: string, status: RequestStatusType) => {
+    return{
+        type: 'CHANGE-TASK-ENTITY-STATUS',
+        payload: {todolistID, taskID, status}
+    }as const
 }
 
 // THUNKS
@@ -109,6 +125,7 @@ export const getTasksTC = (todolistID: string) => (dispatch: Dispatch<TasksActio
 }
 export const removeTaskTC = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
+    dispatch(changeTaskEntityStatusAC(todolistID, taskID, 'loading'))
     todolistsAPI.deleteTask(todolistID, taskID)
         .then(() => {
             dispatch(removeTaskAC(todolistID, taskID))
@@ -150,11 +167,13 @@ export const updateTaskTC = (todolistId: string, taskId: string, domainModel: up
         if (task) {
             const apiModel: updateTaskModelType = {...task, ...domainModel}
             dispatch(setAppStatusAC('loading'))
+            dispatch(changeTaskEntityStatusAC(todolistId, taskId,'loading'))
             todolistsAPI.updateTask(todolistId, taskId, apiModel
             )
                 .then((res) => {
                     if (res.data.resultCode === 0) {
                         dispatch(updateTaskAC(todolistId, taskId, domainModel))
+                        dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'succeeded'))
                         dispatch(setAppStatusAC('succeeded'))
                     } else {
                         handleServerAppError(res.data, dispatch)

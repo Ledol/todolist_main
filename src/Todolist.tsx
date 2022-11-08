@@ -4,10 +4,10 @@ import {EditableSpan} from "./components/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "./components/Task";
-import {TaskStatuses, TaskType} from "./api/todolists-api";
+import {TaskStatuses} from "./api/todolists-api";
 import {FilterTaskType} from "./state/todolists-reducer";
 import {useDispatch} from "react-redux";
-import {getTasksTC} from "./state/tasks-reducer";
+import {getTasksTC, TaskDomainType} from "./state/tasks-reducer";
 import {RequestStatusType} from "./state/app-reducer";
 
 
@@ -15,7 +15,7 @@ type TodolistPropsType = {
     todolistID: string
     title: string
     entityStatus: RequestStatusType
-    tasks: Array<TaskType>
+    tasks: Array<TaskDomainType>
     addNewTask: (todolistID: string, newTitle: string) => void
     removeTask: (todolistID: string, taskId: string) => void
     changeTaskFilter: (todolistID: string, newValue: FilterTaskType) => void
@@ -50,7 +50,7 @@ export const Todolist: FC<TodolistPropsType> = memo((
         addNewTask(todolistID, newTitle)
     }, [addNewTask, todolistID])
 
-    let filteredTasks = tasks;
+    let filteredTasks= tasks;
     if (filter === 'active') {
         filteredTasks = tasks.filter(t => t.status === TaskStatuses.New)
     }
@@ -88,7 +88,7 @@ export const Todolist: FC<TodolistPropsType> = memo((
                                  changeTaskStatus={changeTaskStatusHandler}
                                  removeTask={removeTaskHandler}
                                  editTaskTitle={editTaskTitleHandler}
-                                 entityStatus={entityStatus}
+                                 entityStatus={task.entityStatus}
                     />
 
                 })}

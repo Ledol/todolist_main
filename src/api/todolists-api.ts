@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from "axios";
+import {TaskDomainType} from "../state/tasks-reducer";
 
 
 const instance = axios.create({
@@ -24,7 +25,7 @@ export type TodolistType = {
 
 type getTaskType = {
     error: string[] | null
-    items: TaskType[]
+    items: TaskDomainType[]
     totalCount:number
 }
 
@@ -93,7 +94,7 @@ export const todolistsAPI = {
         )
     },
     createTask(todolistId: string, title: string) {
-        return instance.post<{title: string}, AxiosResponse<ResponseType<{item:TaskType}>>>(
+        return instance.post<{title: string}, AxiosResponse<ResponseType<{item:TaskDomainType}>>>(
             `todo-lists/${todolistId}/tasks`,
             {title},
         )
