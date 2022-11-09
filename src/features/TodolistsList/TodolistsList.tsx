@@ -15,6 +15,8 @@ import Grid from "@mui/material/Grid";
 import {AddItemForm} from "../../components/AddItemForm";
 import Paper from "@mui/material/Paper";
 import {Todolist} from "./Todolist/Todolist";
+import {Navigate} from "react-router-dom";
+import {ROUTS} from "../../AppWithRedux";
 
 
 
@@ -22,10 +24,17 @@ export const TodolistsList = () => {
 
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
     const dispatch = useDispatch<ThunkDispatch<AppRootStateType, unknown, AnyAction>>()
 
+    useEffect(() => {
+        if(!isLoggedIn){
+            return;
+        }
+        dispatch(getTodoTC())
+    }, [])
 
+//CRUD todolists
     const addNewTodolist = useCallback((newTitle: string) => {
         dispatch(addTodolistTC(newTitle))
     }, [dispatch])
@@ -39,6 +48,7 @@ export const TodolistsList = () => {
         dispatch(changeTodolistFilterAC(todolistID, newValue))
     }, [dispatch])
 
+//CRUD tasks
     const changeTaskStatus = useCallback((todolistID: string, taskId: string, status: TaskStatuses) => {
         dispatch(updateTaskTC(todolistID, taskId, {status}))
     }, [dispatch])
@@ -52,9 +62,11 @@ export const TodolistsList = () => {
         dispatch(removeTaskTC(todolistID, taskId))
     }, [dispatch])
 
-    useEffect(() => {
-        dispatch(getTodoTC())
-    }, [])
+
+
+    if (!isLoggedIn) {
+        return <Navigate to={ROUTS.LOGIN}/>
+    }
 
     return ( <>
             <Grid container style={{padding: '20px'}}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 
 // import MUI
@@ -11,12 +11,13 @@ import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import {Menu} from "@mui/icons-material";
 import {ErrorSnackbar} from "./components/ErrorSnackbar";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
 import {RequestStatusType} from "./state/app-reducer";
 import {TodolistsList} from "./features/TodolistsList/TodolistsList";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Login} from "./features/Login/Login";
+import {initializeAppTC} from "./state/authReducer";
 
 
 export enum ROUTS {
@@ -28,6 +29,11 @@ export enum ROUTS {
 function AppWithRedux() {
 
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initializeAppTC())
+    }, [])
 
     return (
         <div className="App">

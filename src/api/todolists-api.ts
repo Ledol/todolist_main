@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import {TaskDomainType} from "../state/tasks-reducer";
+import {LoginDataType} from "../features/Login/Login";
 
 
 const instance = axios.create({
@@ -10,6 +11,70 @@ const instance = axios.create({
     },
 })
 
+// API
+export const todolistsAPI = {
+    updateTodolist(todolistId: string, title: string) {
+        return instance.put<{ title: string }, AxiosResponse<ResponseType>>(
+            `todo-lists/${todolistId}`,
+            {title},
+        )
+    },
+    deleteTodolist(todolistId: string) {
+        return instance.delete<ResponseType>(
+            `todo-lists/${todolistId}`,
+        )
+    },
+    createTodolist(title: string) {
+        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TodolistType }>>>(
+            `todo-lists`,
+            {title},
+        )
+    },
+    getTodolists() {
+        return instance.get<TodolistType[]>(`todo-lists`)
+    },
+
+    getTasks(todolistId: string) {
+        return instance.get<getTaskType>(
+            `todo-lists/${todolistId}/tasks`,
+        )
+    },
+    createTask(todolistId: string, title: string) {
+        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TaskDomainType }>>>(
+            `todo-lists/${todolistId}/tasks`,
+            {title},
+        )
+    },
+    deleteTask(todolistId: string, taskId: string) {
+        return instance.delete<ResponseType>(
+            `todo-lists/${todolistId}/tasks/${taskId}`,
+        )
+    },
+    updateTask(todolistId: string, taskId: string, model: updateTaskModelType) {
+        return instance.put<updateTaskModelType, AxiosResponse<ResponseType<{ item: TaskType }>>>(
+            `todo-lists/${todolistId}/tasks/${taskId}`,
+            model
+        )
+    },
+}
+
+export const authAPI = {
+    login(data: LoginDataType) {
+        return instance.post<LoginDataType, AxiosResponse<ResponseType<{userId: string}>>>('/auth/login', data)
+    },
+    me(){
+        return instance.get<ResponseType<AuthMeResponseType>>('/auth/me')
+    }
+}
+
+
+// TYPES
+
+export type AuthMeResponseType = {
+    id: number
+    email: string
+    login: string
+}
 export type ResponseType<D = {}> = {
     resultCode: number
     messages: Array<string>
@@ -26,24 +91,8 @@ export type TodolistType = {
 type getTaskType = {
     error: string[] | null
     items: TaskDomainType[]
-    totalCount:number
+    totalCount: number
 }
-
-export enum TaskStatuses {
-    New,
-    InProgress,
-    Completed,
-    Draft
-}
-
-export enum TaskPriorities {
-    Low,
-    Middle,
-    Hi,
-    Urgently,
-    Later
-}
-
 export type TaskType = {
     addedDate: string
     deadline: string
@@ -56,58 +105,27 @@ export type TaskType = {
     title: string
     todoListId: string
 }
-
 export type updateTaskModelType = {
     title: string
-    description: string| null
+    description: string | null
     status: TaskStatuses
     priority: TaskPriorities
-    startDate: string| null
-    deadline: string| null
+    startDate: string | null
+    deadline: string | null
 }
 
-export const todolistsAPI = {
-    updateTodolist(todolistId: string, title: string) {
-        return instance.put<{title: string}, AxiosResponse<ResponseType>>(
-            `todo-lists/${todolistId}`,
-            {title},
-        )
-    },
-    deleteTodolist(todolistId: string) {
-        return instance.delete<ResponseType>(
-            `todo-lists/${todolistId}`,
-        )
-    },
-    createTodolist(title: string) {
-        return instance.post<{title: string}, AxiosResponse<ResponseType<{ item: TodolistType }>>>(
-            `todo-lists`,
-            {title},
-        )
-    },
-    getTodolists() {
-        return instance.get<TodolistType[]>(`todo-lists` )
-    },
-
-    getTasks(todolistId: string) {
-        return instance.get<getTaskType>(
-            `todo-lists/${todolistId}/tasks`,
-        )
-    },
-    createTask(todolistId: string, title: string) {
-        return instance.post<{title: string}, AxiosResponse<ResponseType<{item:TaskDomainType}>>>(
-            `todo-lists/${todolistId}/tasks`,
-            {title},
-        )
-    },
-    deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseType>(
-            `todo-lists/${todolistId}/tasks/${taskId}`,
-        )
-    },
-    updateTask(todolistId: string, taskId: string, model: updateTaskModelType ) {
-        return instance.put<updateTaskModelType,AxiosResponse<ResponseType<{item:TaskType}>>> (
-            `todo-lists/${todolistId}/tasks/${taskId}`,
-            model
-        )
-    },
+export enum TaskStatuses {
+    New,
+    InProgress,
+    Completed,
+    Draft
 }
+export enum TaskPriorities {
+    Low,
+    Middle,
+    Hi,
+    Urgently,
+    Later
+}
+
+
