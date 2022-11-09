@@ -5,10 +5,14 @@ import {AppRootStateType} from "./store";
 import {RequestStatusType, setAppStatusAC, SetAppStatusACType} from "./app-reducer";
 import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-import {TasksStateType} from "../AppWithRedux";
 
 export type TasksActionsType = removeTaskACType | addTaskACType | changeTaskStatusACType | changeTaskTitleACType
     | AddTodolistACType | RemoveTodolistACType | SetTodolistsACType | setTasksACType | ChangeTaskEntityStatusACType
+
+export type TasksStateType = {
+    [key: string]: Array<TaskDomainType>
+}
+
 
 const initialState: TasksStateType = {}
 
