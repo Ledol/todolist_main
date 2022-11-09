@@ -15,7 +15,15 @@ import {useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
 import {RequestStatusType} from "./state/app-reducer";
 import {TodolistsList} from "./features/TodolistsList/TodolistsList";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {Login} from "./features/Login/Login";
 
+
+export enum ROUTS {
+    DEFAULT = '/',
+    LOGIN = '/login',
+    NOT_FOUND = '/404',
+}
 
 function AppWithRedux() {
 
@@ -37,7 +45,14 @@ function AppWithRedux() {
                 {status === 'loading' && <LinearProgress color={'inherit'}/>}
             </AppBar>
             <Container fixed>
-                <TodolistsList/>
+                <Routes>
+                    <Route path ={ROUTS.DEFAULT} element={<TodolistsList/>}/>
+                    <Route path ={ROUTS.LOGIN} element={<Login/>}/>
+                    <Route path ={ROUTS.NOT_FOUND} element={<h1 style={{textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
+                    <Route path ='*' element={<Navigate to={ROUTS.NOT_FOUND}/>}/>
+
+                </Routes>
+
             </Container>
         </div>
     );
