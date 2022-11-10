@@ -17,8 +17,12 @@ import {RequestStatusType} from "./state/app-reducer";
 import {TodolistsList} from "./features/TodolistsList/TodolistsList";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Login} from "./features/Login/Login";
-import {initializeAppTC} from "./state/authReducer";
+import {initializeAppTC, logoutTC} from "./state/authReducer";
+import {CircularProgress} from "@mui/material";
 
+type PropsType = {
+    demo?: boolean
+}
 
 export enum ROUTS {
     DEFAULT = '/',
@@ -26,40 +30,56 @@ export enum ROUTS {
     NOT_FOUND = '/404',
 }
 
-function AppWithRedux() {
+function AppWithRedux({demo = false}: PropsType) {
 
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
     const dispatch = useDispatch()
+
+    const isLogoutHandler = () => {
+        dispatch(logoutTC())
+    }
 
     useEffect(() => {
         dispatch(initializeAppTC())
     }, [])
-
+    console.log(isInitialized)
+    debugger
     return (
         <div className="App">
-            <ErrorSnackbar/>
-            <AppBar position='static'>
-                <Toolbar>
-                    <IconButton edge='start' color='inherit' aria-label='menu'>
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant='h6'>
-                        Todolist
-                    </Typography>
-                    <Button color='inherit'>Login</Button>
-                </Toolbar>
-                {status === 'loading' && <LinearProgress color={'inherit'}/>}
-            </AppBar>
-            <Container fixed>
-                <Routes>
-                    <Route path ={ROUTS.DEFAULT} element={<TodolistsList/>}/>
-                    <Route path ={ROUTS.LOGIN} element={<Login/>}/>
-                    <Route path ={ROUTS.NOT_FOUND} element={<h1 style={{textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
-                    <Route path ='*' element={<Navigate to={ROUTS.NOT_FOUND}/>}/>
+            {!isInitialized
+                ? <div
+                    style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+                    <CircularProgress/>
+                </div>
+                : <>
+                    <ErrorSnackbar/>
+                    <AppBar position='static'>
+                        <Toolbar>
+                            <IconButton edge='start' color='inherit' aria-label='menu'>
+                                <Menu/>
+                            </IconButton>
+                            <Typography variant='h6'>
+                                Todolist
+                            </Typography>
+                            {isLoggedIn && <Button color='inherit' onClick={isLogoutHandler}>Log out</Button>}
+                        </Toolbar>
+                        {status === 'loading' && <LinearProgress color={'inherit'}/>}
+                    </AppBar>
+                    <Container fixed>
+                        <Routes>
+                            <Route path={ROUTS.DEFAULT} element={<TodolistsList demo={demo}/>}/>
+                            <Route path={ROUTS.LOGIN} element={<Login/>}/>
+                            <Route path={ROUTS.NOT_FOUND}
+                                   element={<h1 style={{textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
+                            <Route path='*' element={<Navigate to={ROUTS.NOT_FOUND}/>}/>
 
-                </Routes>
+                        </Routes>
 
-            </Container>
+                    </Container>
+                </>
+            }
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {
@@ -18,9 +18,11 @@ import {Todolist} from "./Todolist/Todolist";
 import {Navigate} from "react-router-dom";
 import {ROUTS} from "../../AppWithRedux";
 
+type PropsType = {
+    demo?: boolean
+}
 
-
-export const TodolistsList = () => {
+export const TodolistsList: FC<PropsType> = ({demo = false}) => {
 
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
@@ -90,6 +92,7 @@ export const TodolistsList = () => {
                                       removeTodolist={removeTodolist}
                                       editTaskTitle={editTaskTitle}
                                       editTodolistTitle={editTodolistTitle}
+                                      demo={demo}
                             />
                         </Paper>
                     </Grid>

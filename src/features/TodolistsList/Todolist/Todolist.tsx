@@ -24,12 +24,14 @@ type TodolistPropsType = {
     removeTodolist: (todolistID: string) => void
     editTaskTitle: (todolistID: string, taskId: string, newTitle: string) => void
     editTodolistTitle: (todolistID: string, newTitle: string) => void
+    demo?: boolean
 }
 
 export const Todolist: FC<TodolistPropsType> = memo((
     {
         todolistID, title, tasks, addNewTask, removeTask, changeTaskFilter,
-        changeTaskStatus, filter, removeTodolist, editTaskTitle, editTodolistTitle, entityStatus
+        changeTaskStatus, filter, removeTodolist, editTaskTitle, editTodolistTitle, entityStatus,
+        demo
     }
 ) => {
     console.log('Todolist called')
@@ -69,6 +71,9 @@ export const Todolist: FC<TodolistPropsType> = memo((
     }, [editTaskTitle, todolistID])
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(getTasksTC(todolistID))
     }, [])
 

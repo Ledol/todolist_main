@@ -64,6 +64,9 @@ export const authAPI = {
     },
     me(){
         return instance.get<ResponseType<AuthMeResponseType>>('/auth/me')
+    },
+    isLogout () {
+        return instance.delete<ResponseType>('/auth/login')
     }
 }
 
@@ -126,6 +129,13 @@ export enum TaskPriorities {
     Hi,
     Urgently,
     Later
+}
+
+export enum Result_Code {
+    OK = 0,
+    ERROR = 1,
+    CAPTCHA = 10
+
 }
 
 
